@@ -244,8 +244,8 @@ export default class ExRouteRenderer {
 // by measuring the actual text, etc. We can eventually but for now, we'll just
 // limit titles to at most 18 characters.
 function shortenTitle(title) {
-  if (title.length > 18) {
-    return title.substr(0, 18) + '…';
+  if (title.length > 20) {
+    return title.substr(0, 20) + '…';
   } else {
     return title;
   }
