@@ -4,6 +4,7 @@ import React from 'react';
 import {
   Image,
   Platform,
+  PixelRatio,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -29,6 +30,21 @@ type BarStyles = {
   barButtonIconStyle?: any;
 };
 
+function fixedFont(size) {
+  return size * PixelRatio.get() / PixelRatio.getFontScale();
+}
+
+function createStyleSheet(dict) {
+  for (let key of Object.keys(dict)) {
+    for (let name of Object.keys(dict[key])) {
+      if (name === 'fontSize') {
+        dict[key][name] = fixedFont(dict[key][name])
+      }
+    }
+  }
+  return StyleSheet.create(dict)
+}
+
 class NavigationBarRouteMapper {
   constructor(navigator: ExNavigator, styles: BarStyles) {
     this._navigator = navigator;
@@ -51,8 +67,14 @@ class NavigationBarRouteMapper {
       return null;
     }
 
+    const newTitleStyle = createStyleSheet({
+      style: {
+        ...StyleSheet.flatten(this._titleStyle),
+      },
+    });
+
     return (
-      <Text style={[ExNavigatorStyles.barTitleText, this._titleStyle]} allowFontScaling={false}>
+      <Text style={[ExNavigatorStyles.barTitleText, newTitleStyle.style]} allowFontScaling={false}>
         {shortenTitle(route.getTitle(this._navigator, index, state))}
       </Text>
     );
